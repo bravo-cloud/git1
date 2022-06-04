@@ -1,3 +1,3 @@
 # leetcode-goland
 
-使用go语言，总结leetcode题目
+总结leetcode题解（Goland）
