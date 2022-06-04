@@ -1,3 +1,3 @@
 # leetcode-goland
 
-总结leetcode题解（Goland）
+leetcode题解（Goland）
