@@ -1,0 +1,45 @@
+题目：
+给你一个长度为 n 的整数数组 nums 和 一个目标值 target。请你从 nums 中选出三个整数，使它们的和与 target 最接近。
+返回这三个数的和。
+假定每组输入只存在恰好一个解。
+
+
+
+代码：
+func threeSumClosest(nums []int, target int) int {
+    sort.Ints(nums)
+	n := len(nums)
+	minAbs := 1 << 31-1
+	minSum := 0
+
+	for i, num := range nums{
+		if i >0 && nums[i] == nums[i-1]{
+			continue
+		}
+
+		l, r := i+1, n-1
+		for l < r {
+			sum := num + nums[l] + nums[r]
+			if abs(target - sum) < minAbs{
+				minAbs, minSum = abs(target - sum), sum
+			}
+			switch {
+            case sum < target:
+                l++
+            case sum > target:
+                r--
+            default:
+                return target
+            }
+		}
+
+	}
+	return minSum
+}
+
+func abs(a int) int {
+	if a > 0 {
+		return a
+	}
+	return -a
+}

@@ -1,0 +1,81 @@
+题目：
+给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有和为 0 且不重复的三元组。
+
+
+
+代码：
+func threeSum(nums []int) [][]int {
+    n := len(nums)
+    sort.Ints(nums)
+    ans := make([][]int, 0)
+ 
+    // 枚举 a
+    for first := 0; first < n; first++ {
+        // 需要和上一次枚举的数不相同
+        if first > 0 && nums[first] == nums[first - 1] {
+            continue
+        }
+        // c 对应的指针初始指向数组的最右端
+        third := n - 1
+        target := -1 * nums[first]
+        // 枚举 b
+        for second := first + 1; second < n; second++ {
+            // 需要和上一次枚举的数不相同
+            if second > first + 1 && nums[second] == nums[second - 1] {
+                continue
+            }
+            // 需要保证 b 的指针在 c 的指针的左侧
+            for second < third && nums[second] + nums[third] > target {
+                third--
+            }
+            // 如果指针重合，随着 b 后续的增加
+            // 就不会有满足 a+b+c=0 并且 b<c 的 c 了，可以退出循环
+            if second == third {
+                break
+            }
+            if nums[second] + nums[third] == target {
+                ans = append(ans, []int{nums[first], nums[second], nums[third]})
+            }
+        }
+    }
+    return ans
+}
+
+func threeSum(nums []int) [][]int {
+    sort.Ints(nums) // [-4 -1 -1 0 1 2] // 预排序有 2 个好处：去重 & 指导双指针的下一步方向
+    n := len(nums)
+    var res [][]int
+    for i, num := range nums {
+        if num > 0 {
+            break // 优化，再往后三个正数和不可能为 0
+        }
+
+        // 第一层遍历数向前去重
+        if i > 0 && nums[i] == nums[i-1] { // 因为双指针从 i 之后取，不能使用 nums[i] == nums[i+1] 向后去重
+            continue
+        }
+
+        l, r := i+1, n-1
+        for l < r {
+            sum := num + nums[l] + nums[r]
+            switch {
+            case sum > 0:
+                r--
+            case sum < 0:
+                l++
+            default:
+                res = append(res, []int{num, nums[l], nums[r]})
+                // 第二层候选数向后去重
+                for l < r && nums[l] == nums[l+1] {
+                    l++
+                }
+                for r > l && nums[r] == nums[r-1] {
+                    r--
+                }
+                l++
+                r--
+            }
+        }
+    }
+    return res
+}
